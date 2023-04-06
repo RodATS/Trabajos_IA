@@ -4,10 +4,7 @@ from pygame.locals import DOUBLEBUF
 from pygame.locals import QUIT
 from scipy.spatial import distance
 import heapq
-'''
-	TODO:
- 		- Algoritmo A*
-'''
+
 
 class Button():
     def __init__(self, x, y, width, height, color, buttonText='Button', onclickFunction=None, onePress=False):
@@ -84,7 +81,7 @@ class node:
         self.pos = pos
         self.active = True
         self.circle = None
-        self.color = (0,0,255)
+        self.color = (28,64,142)
     def __str__(self):
         return f"{self.name}({self.pos})"
     def drawNode(self):
@@ -93,6 +90,8 @@ class node:
         
     def deactivate(self):
         self.active = False
+    def activate(self):
+        self.active = True
 
 class matAdy:
     def __init__(self):
@@ -189,8 +188,13 @@ nodes = generateNodes() #lista 1-dimensional de nodos
 generateEdges()
 drawNodes(nodes)
 mAdy.drawEdges()
-dis = calculateDistances(8)
-print("dis: ",dis)
+
+def reset():
+    for i in nodes:
+        i.activate()
+    mAdy = matAdy()
+    generateEdges()
+    mAdy.drawEdges()
 
 #printNodes()
 
@@ -203,10 +207,6 @@ def best_first():
 
     ini = nodo_ini
     fin = nodo_fin
-    if(ini > fin):
-          temp=ini
-          ini=fin
-          fin=temp
     v_pq = []
     visited = {}
     path = []
@@ -224,10 +224,10 @@ def best_first():
                 coloredNodes.append(node)
                 pygame.display.update(nodes[node].circle)
             for i in path:
-                nodes[i].color = [0,255,0]
+                nodes[i].color = [97,217,48]
                 pygame.display.update(nodes[i].circle)
             return visited
-        for i in range(ini,num_nodes):
+        for i in range(num_nodes):
             if mAdy.mat[vertex[1]][i] == 1 and i not in visited:
                 heapq.heappush(v_pq,(dis[i],i))
                 visited[i] = ini  
@@ -265,7 +265,7 @@ def aStar():
                 coloredNodes.append(node)
                 pygame.display.update(nodes[node].circle)
             for i in path:
-                nodes[i].color = [0,255,0]
+                nodes[i].color = [97,217,48]
                 pygame.display.update(nodes[i].circle)
             return visited
         for i in range(ini,num_nodes):
@@ -274,7 +274,6 @@ def aStar():
                 visited[i] = ini  
         print(v_pq, path) 
     return None
-
     
 def detectClickOnNode():
     global nodo_ini
@@ -314,12 +313,13 @@ def clearNodes():
     print(coloredNodes)
     for i in coloredNodes:
         if nodes[i] is not None:
-            nodes[i].color = [0,0,255]
+            nodes[i].color = [28,64,142]
             pygame.display.update(nodes[i].circle)
     coloredNodes.clear()
 
-Button(1170, 500, 100, 50, "556B2F", "A*",  aStar, True)
-Button(1170, 600, 100, 50, "556B2F", "BestFS",  best_first, True)
+Button(1100, 400, 120, 60, "91AFD1", "Reset",  reset, True)
+Button(1100, 500, 120, 60, "556B2F", "A*",  aStar, True)
+Button(1100, 600, 120, 60, "556B2F", "BestFS",  best_first, True)
 botones = ((1170, 500, 100, 50),(1170, 600, 100, 50))
 
 font = pygame.font.SysFont("Consolas", 55)
