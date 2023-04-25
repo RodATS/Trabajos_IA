@@ -5,6 +5,11 @@ import math
 
 
 
+#promedios.append(random.sample(range(1,80),1))
+#plt.plot(promedios,ejeyGeneraciones, ":",color="b")
+#plt.show()
+
+
 def distancia_euclidiana(punto1,punto2):
     n = len(punto1) #x,y
     suma_cuadrados = 0
@@ -38,13 +43,13 @@ def encontrarLosCaminosMasCaros(costoCamino,generacionN):
     indiceMaximo1 = 0
     indiceMaximo2 = 0
 
-    for i in range(1,len(costoCamino[generacionN])):
-        if( costoCamino[generacionN][i] > costoCamino[generacionN][indiceMaximo1]):
+    for i in range(1,len(costoCamino)):
+        if( costoCamino[i][generacionN] > costoCamino[indiceMaximo1][generacionN]):
             indiceMaximo1 = i
     
 
-    for j in range(1,len(costoCamino[generacionN])):
-        if( costoCamino[generacionN][j] > costoCamino[generacionN][indiceMaximo2] and costoCamino[generacionN][j] < indiceMaximo1):
+    for j in range(1,len(costoCamino)):
+        if( costoCamino[j][generacionN] > costoCamino[indiceMaximo2][generacionN] and costoCamino[j][generacionN] < costoCamino[indiceMaximo1][generacionN]):
             indiceMaximo2 = j
         
     return indiceMaximo1,indiceMaximo2
@@ -55,8 +60,8 @@ def encontrarCaminoMinimo(costoCamino,generacionN):
    
     indiceMinimo1 = 0
 
-    for i in range(1,len(costoCamino[generacionN])):
-        if( costoCamino[generacionN][i] < costoCamino[generacionN][indiceMinimo1]):
+    for i in range(1,len(costoCamino)):
+        if( costoCamino[i][generacionN] < costoCamino[indiceMinimo1][generacionN]):
             indiceMinimo1 = i
     
     return indiceMinimo1
@@ -122,7 +127,7 @@ for gen in range(nGeneraciones):
     promedios.append(prom/len(caminos))
 
     #seleccionar los caminos mas costosos
-    #posiciones de los caminos mas caros por generacion, inicilizacion
+    #posiciones de los caminos mas caros, inicilizacion
     pos1,pos2 = encontrarLosCaminosMasCaros(costoPorCamino,gen)
 
     print(pos1)
