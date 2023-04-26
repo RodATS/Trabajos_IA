@@ -185,6 +185,12 @@ for gen in range(nGeneraciones):
 
 posMinFinal = encontrarCaminoMinimo(costoPorCamino,nGeneraciones-1)
 
+print("\nDistancia del menor camino al inicio")
+print(costoPorCamino[posMinIncio][nGeneraciones-1])
+print("\nDistancia del menor camino al final")
+print(costoPorCamino[posMinFinal][nGeneraciones-1])
+
+print("Debería graficar pronto")
 print("Debería graficar pronto")
 
 plt.plot(ejexGeneraciones,promedios, ":",color="b")
