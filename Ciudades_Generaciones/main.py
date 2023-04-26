@@ -3,8 +3,6 @@ import random
 import math
 
 
-
-
 #promedios.append(random.sample(range(1,80),1))
 #plt.plot(promedios,ejeyGeneraciones, ":",color="b")
 #plt.show()
@@ -18,8 +16,29 @@ def distancia_euclidiana(punto1,punto2):
     return math.sqrt(suma_cuadrados)
 
 
+def partition(array, bits, low, high):
+  pivot = bits[high][0]
+  i = low - 1
+
+  for j in range(low, high):
+    if bits[j][0] <= pivot:
+      i = i + 1
+      (array[i], array[j]) = (array[j], array[i])
+  (array[i + 1], array[high]) = (array[high], array[i + 1])
+  return i + 1
+
+# function to perform quicksort
+def quickSort(array, bits, low, high):
+  if low < high:
+
+    pi = partition(array, bits, low, high)
+    quickSort(array, bits, low, pi - 1)
+    quickSort(array, bits, pi + 1, high)
+
+
 def cambioCaminos(caminos,bits):
   limite = len(caminos)-1
+  '''
   indexUno = 1
   indexCero = 1
   while(indexCero < limite and indexUno < limite):
@@ -37,6 +56,8 @@ def cambioCaminos(caminos,bits):
       caminos[indexUno] = temp
       indexCero += 1
       indexUno += 1
+  '''
+  quickSort(caminos, bits, 1, limite -1)
 
     
 def encontrarLosCaminosMasCaros(costoCamino,generacionN):
@@ -68,13 +89,13 @@ def encontrarCaminoMinimo(costoCamino,generacionN):
 
 
 
-nCiudades = 6
+nCiudades = 20
 #A B C D E 
 #Hay 13
-posCiudades = [[2,3],[3,4],[5,4],[5,2],[3,1],[6,1],[1,1],[2,1],[3,3],[1,5],[4,2],[9,1],[2,9]]
+posCiudades = [[2,3],[3,4],[5,4],[5,2],[3,1],[6,1],[1,1],[2,1],[3,3],[1,5],[4,2],[9,1],[2,9],[5,5],[8,9],[3,2],[6,7],[7,3],[6,6],[7,2]]
 
 
-nGeneraciones = 2
+nGeneraciones = 100
 ejexGeneraciones = []
 for i in range(nGeneraciones):
     ejexGeneraciones.append(i)
@@ -84,13 +105,13 @@ for i in range(nGeneraciones):
 bitsCambio = []
 for i in range (nCiudades+1):
         bitsCambio.append(random.sample(range(0,2),1))
-print(bitsCambio)
+#print(bitsCambio)
 
 def cambioBitsPorGeneracion(bitsCambio):
-    print("Nuevos bits")
+    #print("Nuevos bits")
     for i in range (nCiudades+1):
         bitsCambio[i]=(random.sample(range(0,2),1))
-    print(bitsCambio)
+    #print(bitsCambio)
 
 
 
@@ -113,15 +134,15 @@ costoPorCamino = [[],[],[],[]]
 
 #generaciones = 10
 for gen in range(nGeneraciones):
-    print("generacion " + str(gen))
+    #print("generacion " + str(gen))
     prom = 0
     for i in range(len(caminos)):
         distancia = 0
-        print("Para el camino "+ str(i+1))
+        #print("Para el camino "+ str(i+1))
         for j in range(nCiudades):
             distancia += distancia_euclidiana(posCiudades[caminos[i][j]], posCiudades[caminos[i][j+1]])
-        print(distancia)
-        print("\n")
+        #print(distancia)
+        #print("\n")
         costoPorCamino[i].append(distancia)
         prom += distancia
     promedios.append(prom/len(caminos))
@@ -130,10 +151,10 @@ for gen in range(nGeneraciones):
     #posiciones de los caminos mas caros, inicilizacion
     pos1,pos2 = encontrarLosCaminosMasCaros(costoPorCamino,gen)
 
-    print(pos1)
-    print(pos2)
+    #print(pos1)
+    #print(pos2)
 
-    print(costoPorCamino)
+    #print(costoPorCamino)
     # cambio en los caminos mas caros
     cambioCaminos(caminos[pos1],bitsCambio)
     cambioCaminos(caminos[pos2],bitsCambio)
@@ -142,6 +163,8 @@ for gen in range(nGeneraciones):
     
 
 posMin = encontrarCaminoMinimo(costoPorCamino,nGeneraciones-1)
+
+print("Debería graficar pronto")
 
 plt.plot(ejexGeneraciones,promedios, ":",color="b")
 plt.plot(ejexGeneraciones, costoPorCamino[posMin],":",color="r")
