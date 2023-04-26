@@ -21,7 +21,7 @@ def partition(array, bits, low, high):
   i = low - 1
 
   for j in range(low, high):
-    if bits[j][0] <= pivot:
+    if bits[j][0] > pivot:
       i = i + 1
       (array[i], array[j]) = (array[j], array[i])
   (array[i + 1], array[high]) = (array[high], array[i + 1])
