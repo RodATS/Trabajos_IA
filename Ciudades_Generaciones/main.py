@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import random
 import math
+import copy as cp
 
 
 #promedios.append(random.sample(range(1,80),1))
@@ -58,30 +59,31 @@ def cambioCaminos(caminos,bits):
 
     
 def encontrarLosCaminosMasCaros(costoCamino,generacionN):
-    indiceMaximo1 = 0
-    indiceMaximo2 = 0
-    indiceMinimo3 = 0
-    indiceMinimo4 = 0
+    mínimo = 0
+    segundo_mínimo = 1
+    máximo = 0
+    segundo_máximo = 1
 
-    for i in range(1,len(costoCamino)):
-        if( costoCamino[i][generacionN] > costoCamino[indiceMaximo1][generacionN]):
-            indiceMaximo1 = i
-    
+    if costoCamino[1][generacionN] < costoCamino[0][generacionN]:
+        mínimo = 1
+        segundo_mínimo = 0
+    if costoCamino[1][generacionN] > costoCamino[0][generacionN]:
+        máximo = 1
+        segundo_máximo = 0
 
-    for j in range(1,len(costoCamino)):
-        if( costoCamino[j][generacionN] > costoCamino[indiceMaximo2][generacionN] and costoCamino[j][generacionN] < costoCamino[indiceMaximo1][generacionN] and indiceMaximo1 != j):
-            indiceMaximo2 = j
+    for i in range(2, len(costoCamino)):
+        if costoCamino[i][generacionN] < costoCamino[mínimo][generacionN]:
+            segundo_mínimo = mínimo
+            mínimo = i
+        elif costoCamino[i][generacionN] < costoCamino[segundo_mínimo][generacionN]:
+            segundo_mínimo = i
+        elif costoCamino[i][generacionN] >= costoCamino[máximo][generacionN]:
+            segundo_máximo = máximo
+            máximo = i
+        elif costoCamino[i][generacionN] >= costoCamino[segundo_máximo][generacionN]:
+            segundo_máximo = i
 
-    for i in range(1,len(costoCamino)):
-        if( costoCamino[i][generacionN] < costoCamino[indiceMinimo3][generacionN] and i != indiceMaximo1 and i != indiceMaximo2 ):
-            indiceMinimo3 = i
-    
-
-    for j in range(1,len(costoCamino)):
-        if( costoCamino[j][generacionN] < costoCamino[indiceMinimo4][generacionN] and costoCamino[j][generacionN] > costoCamino[indiceMinimo3][generacionN] and j != indiceMinimo3 ):
-            indiceMinimo4 = j
-        
-    return indiceMaximo1,indiceMaximo2,indiceMinimo3, indiceMinimo4
+    return máximo, segundo_máximo, mínimo, segundo_mínimo
 
 
 
@@ -98,13 +100,13 @@ def encontrarCaminoMinimo(costoCamino,generacionN):
 
 
 
-nCiudades = 20
+nCiudades = 6
 #A B C D E 
 #Hay 13
-posCiudades = [[2,3],[3,4],[5,4],[5,2],[3,1],[6,1],[1,1],[2,1],[3,3],[1,5],[4,2],[9,1],[2,9],[5,5],[1,9],[3,2],[6,7],[7,3],[6,6],[7,2]]
+posCiudades = [[2,3],[3,4],[5,4],[5,2],[3,1],[6,1],[1,1],[2,1],[3,3],[1,5],[4,2],[4,1],[2,9],[5,5],[1,7],[3,2],[6,7],[7,3],[6,6],[7,2]]
 
 
-nGeneraciones = 100
+nGeneraciones = 20
 ejexGeneraciones = []
 for i in range(nGeneraciones):
     ejexGeneraciones.append(i)
@@ -162,21 +164,22 @@ for gen in range(nGeneraciones):
 
     #posiciones de los caminos mas baratos, inicilizacion
 
-    #print(costoPorCamino)
+    print(costoPorCamino)
     #hacer la copia
-    #caminos[pos1] = caminos[pos3]
-    #caminos[pos2] = caminos[pos4]
+    caminos[pos1] = cp.deepcopy(caminos[pos3])
+    caminos[pos2] = cp.deepcopy(caminos[pos4])
 
-    #print(pos1)
-    #print(pos2)
-    #print(pos3)
-    #print(pos4)
+    print(pos1)
+    print(pos2)
+    print(pos3)
+    print(pos4)
 
     #print(costoPorCamino)
     # cambio en los caminos mas caros (copias)
-    print(bitsCambio)
+    print("antes: ", bitsCambio, caminos[pos1], caminos[pos2])
     cambioCaminos(caminos[pos1],bitsCambio)
     cambioCaminos(caminos[pos2],bitsCambio)
+    print("post: ",bitsCambio, caminos[pos1], caminos[pos2])
 
     cambioBitsPorGeneracion(bitsCambio)
     if(gen == 0):
@@ -191,7 +194,7 @@ print("\nDistancia del menor camino al final")
 print(costoPorCamino[posMinFinal][nGeneraciones-1])
 
 print("Debería graficar pronto")
-print("Debería graficar pronto")
+
 
 plt.plot(ejexGeneraciones,promedios, ":",color="b")
 plt.plot(ejexGeneraciones, costoPorCamino[posMinIncio],":",color="r")
